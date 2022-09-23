@@ -1,0 +1,21 @@
+apiVersion: 1.0.0
+metadata:
+  name: nodejs-with-db
+projects:
+  - name: nodejs-mongo-app
+    source:
+      type: git
+      location: 'https://github.com/ijason/NodeJS-Sample-App.git'
+      commitId: 187d468 # refers to the last commitId the project compiles (with express3)
+components:
+  - type: kubernetes
+    reference: mongo-db.yaml
+  - alias: nodejs-app
+    type: openshift
+    reference: nodejs-app.yaml
+commands:
+  - name: run
+    actions:
+      - type: exec
+        component: nodejs-app
+        command: cd ${CHE_PROJECTS_ROOT}/nodejs-mongo-app/EmployeeDB/ && npm install && sed -i -- ''s/localhost/mongo/g'' app.js && node app.js
